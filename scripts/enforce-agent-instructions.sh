@@ -23,7 +23,9 @@ read -r -d '' POLICY_BLOCK <<'BLOCK' || true
 <!-- hendaz-next-essentials:strict-rules:end -->
 BLOCK
 
-mapfile -t instruction_files < <(find "$TARGET_DIR" -type f \( -name 'AGENTS.md' -o -name 'CLAUDE.md' \) | sort)
+instruction_files=()
+[[ -f "$TARGET_DIR/AGENTS.md" ]] && instruction_files+=("$TARGET_DIR/AGENTS.md")
+[[ -f "$TARGET_DIR/CLAUDE.md" ]] && instruction_files+=("$TARGET_DIR/CLAUDE.md")
 
 upsert_block() {
   local file="$1"
@@ -54,7 +56,7 @@ upsert_block() {
 if [[ ${#instruction_files[@]} -eq 0 ]]; then
   fallback_file="$TARGET_DIR/AGENTS.md"
   upsert_block "$fallback_file"
-  echo "No AGENTS.md/CLAUDE.md found. Created: $fallback_file"
+  echo "No root AGENTS.md/CLAUDE.md found. Created: $fallback_file"
   exit 0
 fi
 

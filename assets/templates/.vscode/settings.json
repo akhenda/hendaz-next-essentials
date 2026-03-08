@@ -1,5 +1,5 @@
 {
-  "prettier.enable": true,
+  "prettier.enable": false,
   "eslint.enable": false,
   "biome.enabled": true,
 
@@ -8,7 +8,7 @@
   "editor.tabSize": 2,
   "editor.wordWrap": "on",
   "editor.insertSpaces": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.defaultFormatter": "biomejs.biome",
   "emmet.showExpandedAbbreviation": "never",
 
   "editor.codeActionsOnSave": {

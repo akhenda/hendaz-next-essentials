@@ -8,16 +8,18 @@ description: Scaffold a newly created Next.js project with Hendaz defaults: comm
 ## Workflow
 
 1. Confirm target directory is a Next.js project root.
-2. Run `scripts/apply-templates.sh <project-path>` from this skill.
+2. Run `scripts/apply-templates.sh [--no-overwrite] [--backup] <project-path>` from this skill.
 3. Verify created files and removed files.
-4. Verify `AGENTS.md`/`CLAUDE.md` include enforced strict rules block.
+4. Verify root `AGENTS.md`/`CLAUDE.md` include enforced strict rules block.
 5. Run quality checks (`bun run lint`, `bun run typecheck`) when available.
 
 ## Agent Instruction Enforcement
 
 This skill must update project instruction files with strict rules.
 
-- It searches recursively for `AGENTS.md` and `CLAUDE.md`.
+- It checks only root-level instruction files:
+  - `<project-root>/AGENTS.md`
+  - `<project-root>/CLAUDE.md`
 - It upserts a managed block into each file with these rules:
   - prohibit `any`
   - allow `AnyType` or `AnyValue` only sparingly, and only when imported from `src/types/common`
@@ -37,13 +39,18 @@ Managed by script:
 Use the script for deterministic setup:
 
 ```bash
-/Users/hendaz/.codex/skills/hendaz-next-essentials/scripts/apply-templates.sh /path/to/project
+/Users/hendaz/.codex/skills/hendaz-next-essentials/scripts/apply-templates.sh [--no-overwrite] [--backup] /path/to/project
 ```
+
+Options:
+
+- `--no-overwrite`: skip files that already exist.
+- `--backup`: create timestamped backups before overwriting existing files.
 
 The script will:
 
 1. Copy templates from `assets/templates` into the target project.
-2. Enforce strict rules in `AGENTS.md`/`CLAUDE.md`.
+2. Enforce strict rules in root `AGENTS.md`/`CLAUDE.md`.
 3. Remove ESLint config files if present.
 4. Remove `.husky/` if present.
 5. Install all required packages with Bun.

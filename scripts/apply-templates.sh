@@ -4,17 +4,67 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SKILL_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 TEMPLATE_ROOT="$SKILL_ROOT/assets/templates"
-TARGET_DIR="${1:-$PWD}"
+
+OVERWRITE=true
+BACKUP=false
+TARGET_DIR=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --no-overwrite)
+      OVERWRITE=false
+      shift
+      ;;
+    --backup)
+      BACKUP=true
+      shift
+      ;;
+    -h|--help)
+      echo "Usage: $(basename "$0") [--no-overwrite] [--backup] [target-dir]"
+      exit 0
+      ;;
+    *)
+      if [[ -n "$TARGET_DIR" ]]; then
+        echo "Unexpected argument: $1" >&2
+        exit 1
+      fi
+      TARGET_DIR="$1"
+      shift
+      ;;
+  esac
+done
+
+TARGET_DIR="${TARGET_DIR:-$PWD}"
 
 if [[ ! -d "$TARGET_DIR" ]]; then
   echo "Target directory does not exist: $TARGET_DIR" >&2
   exit 1
 fi
 
+backup_file() {
+  local dest="$1"
+  if [[ "$BACKUP" == true && -f "$dest" ]]; then
+    local stamp
+    stamp="$(date +%Y%m%d%H%M%S)"
+    cp "$dest" "${dest}.bak.${stamp}"
+    echo "Backed up: ${dest}.bak.${stamp}"
+  fi
+}
+
 copy_file() {
   local rel="$1"
-  mkdir -p "$TARGET_DIR/$(dirname "$rel")"
-  cp "$TEMPLATE_ROOT/$rel" "$TARGET_DIR/$rel"
+  local src="$TEMPLATE_ROOT/$rel"
+  local dest="$TARGET_DIR/$rel"
+
+  mkdir -p "$(dirname "$dest")"
+
+  if [[ -f "$dest" && "$OVERWRITE" == false ]]; then
+    echo "Skipped (exists): $rel"
+    return
+  fi
+
+  backup_file "$dest"
+  cp "$src" "$dest"
   echo "Applied: $rel"
 }
 

@@ -1,46 +1,32 @@
 /**
- * This configuration is for lint-staged, which runs specified commands on staged files before committing.
- * It is used to ensure code quality and consistency by running tasks like formatting, linting,
- * and type checking on files that are about to be committed.
- *
- * NOTE: Some of the commands are disabled to allow users to commit changes that are WIP or not.
- *
- * Enable or disable commands as needed based on your project's requirements.
+ * This configuration runs file-targeted checks for staged files to keep commits fast.
+ * Keep full-repo lint/typecheck in CI or pre-push hooks.
  */
 
 const config = {
-  i18nEtract: false,
-  lintRepo: true,
+  i18nExtract: false,
+  lintStagedFiles: true,
   typecheck: false,
-
-  /**
-   * Format, sort imports, lint, and apply safe fixes
-   * https://biomejs.dev/recipes/git-hooks/#husky
-   */
-  format: true,
 };
 
 function runI18nExtract() {
-  return config.i18nEtract
+  return config.i18nExtract
     ? 'echo "bun run i18n:extract-and-sync"'
     : 'echo "i18n:extract is disabled"';
 }
 
-function runLint() {
-  return config.lintRepo ? 'bun run lint' : 'echo "lint is disabled"';
+function runBiomeCheck() {
+  return config.lintStagedFiles
+    ? 'bunx @biomejs/biome check --write --no-errors-on-unmatched'
+    : 'echo "biome check is disabled"';
 }
 
 function runTypecheck() {
-  return config.typecheck ? 'bun run typecheck' : ' echo "typecheck is disabled"';
-}
-
-function runFormat() {
-  return config.format ? 'bun run format' : 'echo "format is disabled"';
+  return config.typecheck ? 'bun run typecheck' : 'echo "typecheck is disabled"';
 }
 
 module.exports = {
-  // NOTE: runTypecheck is disabled globally because running it on only staged files resets the file and deletes other tems
-  '*': [runI18nExtract, runLint],
-  '{src,app}/**/*.{ts,tsx}': runTypecheck(),
-  '{src,app}/**/*.{js,ts,jsx,tsx,json,jsonc,md,mdx,html,css,scss}': [runFormat()],
+  '*': [runI18nExtract],
+  '{src,app}/**/*.{js,ts,jsx,tsx,json,jsonc,md,mdx,html,css,scss}': [runBiomeCheck()],
+  '{src,app}/**/*.{ts,tsx}': [runTypecheck()],
 };
