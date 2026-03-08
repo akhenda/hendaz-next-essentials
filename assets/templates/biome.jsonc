@@ -1,0 +1,298 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "extends": ["ultracite/core", "ultracite/react", "ultracite/next"],
+  "files": {
+    "includes": ["src/lib/db/generated/**/*"]
+  },
+  "vcs": {
+    "clientKind": "git",
+    "enabled": true,
+    "useIgnoreFile": true
+  },
+  "formatter": {
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 100,
+    "formatWithErrors": true
+  },
+  "javascript": {
+    "formatter": {
+      "arrowParentheses": "always",
+      "quoteStyle": "single",
+      "trailingCommas": "all"
+    },
+    "globals": [
+      "__DEV__",
+      "afterEach",
+      "afterAll",
+      "beforeEach",
+      "beforeAll",
+      "jest",
+      "EdgeRuntime"
+    ],
+    "jsxRuntime": "reactClassic"
+  },
+  "json": {
+    "formatter": {
+      "lineWidth": 80,
+      "trailingCommas": "none"
+    },
+    "linter": {
+      "enabled": true
+    },
+    "parser": {
+      "allowComments": true,
+      "allowTrailingCommas": false
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "a11y": {
+        "noAutofocus": "off",
+        "noSvgWithoutTitle": "off"
+      },
+      "security": {
+        "noSecrets": "off"
+      },
+      "complexity": {
+        "noForEach": "off",
+        "useSimplifiedLogicExpression": "off",
+        "noExcessiveCognitiveComplexity": {
+          "level": "warn",
+          "options": {
+            "maxAllowedComplexity": 30
+          }
+        }
+      },
+      "correctness": {
+        "noUndeclaredDependencies": "off",
+        "useImportExtensions": "off",
+        "noNodejsModules": "off",
+        "useExhaustiveDependencies": "off",
+        "noUnusedImports": {
+          "level": "warn",
+          "fix": "safe",
+          "options": {}
+        },
+        "noUnusedVariables": {
+          "level": "warn",
+          "fix": "safe",
+          "options": {
+            "ignoreRestSiblings": false
+          }
+        }
+      },
+      "nursery": {
+        "useExplicitType": "off",
+        "noLeakedRender": "off",
+        "useSortedClasses": {
+          "fix": "safe",
+          "level": "error",
+          "options": {
+            "attributes": ["className"],
+            "functions": ["clsx", "cva", "tw", "twMerge", "cn", "twJoin"]
+          }
+        }
+      },
+      "performance": {
+        "noBarrelFile": "off",
+        "noReExportAll": "off",
+        "noNamespaceImport": "off"
+      },
+      "style": {
+        "noNonNullAssertion": "off",
+        "noDefaultExport": "off",
+        "noImplicitBoolean": "off",
+        "useBlockStatements": "off",
+        "useExplicitLengthCheck": "off",
+        "useSingleVarDeclarator": "off",
+        "useNamingConvention": "off",
+        "noCommonJs": "off",
+        "noProcessEnv": "off",
+        "useComponentExportOnlyModules": "off",
+        "useConsistentCurlyBraces": "off",
+        "noExportedImports": "off",
+        "useConsistentTypeDefinitions": "on",
+        "useImportType": {
+          "level": "error",
+          "options": {
+            "style": "separatedType"
+          }
+        }
+      },
+      "suspicious": {
+        "noReactSpecificProps": "off",
+        "noExplicitAny": "error",
+        "noArrayIndexKey": "off",
+        "useStrictMode": "off",
+        "noConsole": "on",
+        "noUnknownAtRules": "off"
+      }
+    }
+  },
+  "html": {
+    "formatter": {
+      "lineWidth": 80,
+      "selfCloseVoidElements": "always"
+    }
+  },
+  "css": {
+    "formatter": {
+      "lineWidth": 80,
+      "quoteStyle": "double"
+    },
+    "parser": {
+      "allowWrongLineComments": false,
+      "cssModules": false,
+      "tailwindDirectives": true
+    }
+  },
+  "overrides": [
+    {
+      "includes": [
+        "packages/modules/backend/**/*",
+        "apps/convex/**/*",
+        "packages/backend/**/*",
+        "packages/convex/**/*",
+        "convex/**/*",
+        "backend/**/*"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "useFilenamingConvention": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/app/globals.css"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noUnknownAtRules": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "playwright.config.ts",
+        "vitest.config.ts",
+        "tests/**/*.ts",
+        "tests/**/*.tsx"
+      ],
+      "javascript": {
+        "globals": [
+          "afterAll",
+          "afterEach",
+          "beforeAll",
+          "beforeEach",
+          "describe",
+          "expect",
+          "it",
+          "test",
+          "vi"
+        ]
+      },
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noConsole": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["scripts/**/*.ts", "public/sw.js"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noConsole": "off"
+          }
+        }
+      }
+    }
+  ],
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "useSortedKeys": "off",
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "groups": [
+              ":URL:",
+              ":BLANK_LINE:",
+              ":NODE:",
+              ":BUN:",
+              ":BLANK_LINE:",
+              ["react", "react-*", "react/**"],
+              ":BLANK_LINE:",
+              [
+                "@react",
+                "@react-*",
+                "@react-*/**",
+                "@react/**",
+                "rn-*",
+                "rn/**",
+                "rn-*/**",
+                "@rn-*",
+                "@rn/**",
+                "@rn-*/**"
+              ],
+              ":BLANK_LINE:",
+              ["next", "next-*", "next/**", "@next", "@next-*", "@next/**"],
+              ":BLANK_LINE:",
+              ["expo", "expo-*", "expo/**", "@expo", "@expo-*", "@expo/**"],
+              ":BLANK_LINE:",
+              [
+                "convex",
+                "convex-*",
+                "convex/**",
+                "convex-helpers/**",
+                "@convex",
+                "@convex-*",
+                "@convex/**",
+                "@convex-dev/**"
+              ],
+              ":BLANK_LINE:",
+              [":PACKAGE_WITH_PROTOCOL:"],
+              ":BLANK_LINE:",
+              [
+                ":PACKAGE:",
+                "!@udecode/**",
+                "!@repo/**",
+                "!@/**",
+                "!../**",
+                "!./**"
+              ],
+              ":BLANK_LINE:",
+              ["@udecode/**"],
+              ":BLANK_LINE:",
+              ["@repo/**"],
+              ":BLANK_LINE:",
+              ["@/**", ":ALIAS:"],
+              ":BLANK_LINE:",
+              ["../**"],
+              ":BLANK_LINE:",
+              ["./**", ":PATH:"],
+              ":BLANK_LINE:",
+              [
+                "**/*.css",
+                "**/*.scss",
+                "./**/*.css",
+                "./**/*.scss",
+                "./**/*.less"
+              ],
+              ":BLANK_LINE:"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

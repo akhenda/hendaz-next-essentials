@@ -1,0 +1,16 @@
+pre-commit:
+  jobs:
+    - name: staged-quality
+      run: bunx lint-staged --concurrent false
+
+commit-msg:
+  commands:
+    conventional-commits:
+      run: bunx commitlint --edit {1}
+
+pre-push:
+  jobs:
+    - name: unit-tests
+      run: bun run test:unit
+    - name: e2e-tests
+      run: bun run test:e2e --project=chromium

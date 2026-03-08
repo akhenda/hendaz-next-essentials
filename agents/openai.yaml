@@ -1,0 +1,4 @@
+interface:
+  display_name: "Hendaz Next Essentials"
+  short_description: "Bootstrap Next.js project essentials"
+  default_prompt: "Use $hendaz-next-essentials to scaffold a new Next.js project with my standard tools and config files."

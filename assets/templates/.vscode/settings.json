@@ -1,0 +1,102 @@
+{
+  "prettier.enable": true,
+  "eslint.enable": false,
+  "biome.enabled": true,
+
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": false,
+  "editor.tabSize": 2,
+  "editor.wordWrap": "on",
+  "editor.insertSpaces": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "emmet.showExpandedAbbreviation": "never",
+
+  "editor.codeActionsOnSave": {
+    "source.sortMembers": "explicit",
+    "source.fixAll.biome": "explicit",
+    "source.organizeImports.biome": "explicit",
+
+    "source.addMissingImports": "explicit"
+  },
+
+  "files.eol": "\n",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+
+  "search.exclude": {
+    "**/node_modules": true,
+    "yarn.lock": true,
+    "pnpm-lock.yaml": true,
+    "bun.lockb": true,
+    "bun.lock": true
+  },
+
+  "css.customData": [".vscode/tailwind.json"],
+  "scss.lint.unknownAtRules": "ignore",
+  "terminal.integrated.localEchoStyle": "dim",
+  "js/ts.tsdk.promptToUseWorkspaceVersion": true,
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
+  "js/ts.preferences.autoImportFileExcludePatterns": [
+    "next/router.d.ts",
+    "next/dist/client/router.d.ts"
+  ],
+  "tailwindCSS.experimental.classRegex": [
+    ["tva\\((([^()]*|\\([^()]*\\))*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
+  ],
+  "tailwindCSS.classAttributes": ["class", "className", "headerClassName"],
+
+  "[dotenv]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "[github-actions-workflow]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[handlebars]": {
+    "editor.defaultFormatter": "mohd-akram.vscode-html-format"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[json5]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+  },
+  "[svg]": {
+    "editor.defaultFormatter": "jock.svg"
+  },
+  "[tailwindcss]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[graphql]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  }
+}
