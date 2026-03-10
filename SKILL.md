@@ -1,15 +1,15 @@
 ---
 name: hendaz-next-essentials
-description: Scaffold a newly created Next.js project with Hendaz defaults: commitizen + commitlint + cz-git, .commitsage, markdownlint config, bunfig.toml, Biome + Ultracite (and ESLint removal), lefthook + lint-staged (and Husky removal), VS Code workspace files, shared `src/types` utilities, and a production-ready logger. Use when a user asks to bootstrap, standardize, or initialize a Next.js project with these recurring essentials.
+description: "Scaffold a newly created Next.js project with Hendaz defaults: commitizen + commitlint + cz-git, .commitsage, markdownlint config, bunfig.toml, Biome + Ultracite (and ESLint removal), lefthook + lint-staged (and Husky removal), VS Code workspace files, shared src/types utilities, and a production-ready logger. Use when a user asks to bootstrap, standardize, or initialize a Next.js project with these recurring essentials."
 ---
 
 # Hendaz Next Essentials
 
 ## Workflow
 
-1. Confirm target directory is a Next.js project root.
+1. Confirm target directory is a Next.js project root and normalize it to `src/` layout if it is still using root-level source directories.
 2. Run `scripts/apply-templates.sh [--no-overwrite] [--backup] <project-path>` from this skill.
-3. Verify created files and removed files.
+3. Verify created files, removed files, and any moved source directories now live under `src/`.
 4. Verify root `AGENTS.md`/`CLAUDE.md` include enforced strict rules block.
 5. Run quality checks (`bun run lint`, `bun run typecheck`) when available.
 
@@ -49,12 +49,13 @@ Options:
 
 The script will:
 
-1. Copy templates from `assets/templates` into the target project.
-2. Enforce strict rules in root `AGENTS.md`/`CLAUDE.md`.
-3. Remove ESLint config files if present.
-4. Remove `.husky/` if present.
-5. Install all required packages with Bun.
-6. Run `bun install` to refresh lockfile state.
+1. Ensure the project uses `src/` layout. If root-level Next.js source directories/files such as `app`, `pages`, `components`, `lib`, `utils`, `hooks`, `styles`, `types`, `middleware.ts`, or `instrumentation.ts` exist and `src/` does not, the script moves them into `src/` first.
+2. Copy templates from `assets/templates` into the target project.
+3. Enforce strict rules in root `AGENTS.md`/`CLAUDE.md`.
+4. Remove ESLint config files if present.
+5. Remove `.husky/` if present.
+6. Install all required packages with Bun.
+7. Run `bun install` to refresh lockfile state.
 
 ## Templates Included
 
@@ -90,3 +91,4 @@ Runtime dependencies installed by the script:
 - The user corrected lockfile intent to `bunfig.toml`; do not add lockfile-specific templates.
 - If template updates are requested, update files in `assets/templates/` first, then re-run the apply script.
 - A provided template labeled as `src/types/common.ts` (barrel exports) is intentionally stored as `src/types/index.ts`.
+- The `src/` normalization step runs before template copying so all generated Hendaz defaults land in a consistent Next.js source layout.

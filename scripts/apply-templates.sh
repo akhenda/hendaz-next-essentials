@@ -41,6 +41,51 @@ if [[ ! -d "$TARGET_DIR" ]]; then
   exit 1
 fi
 
+ensure_src_layout() {
+  local src_dir="$TARGET_DIR/src"
+  local moved_any=false
+  local candidate=""
+  local -a move_targets=(
+    "app"
+    "pages"
+    "components"
+    "lib"
+    "utils"
+    "hooks"
+    "styles"
+    "types"
+    "middleware.ts"
+    "instrumentation.ts"
+  )
+
+  if [[ -d "$src_dir" ]]; then
+    echo "Using existing src/ directory."
+    return
+  fi
+
+  for candidate in "${move_targets[@]}"; do
+    if [[ -e "$TARGET_DIR/$candidate" ]]; then
+      moved_any=true
+      break
+    fi
+  done
+
+  if [[ "$moved_any" == false ]]; then
+    echo "No root-level Next.js source directories found. Creating src/ for skill templates."
+    mkdir -p "$src_dir"
+    return
+  fi
+
+  mkdir -p "$src_dir"
+
+  for candidate in "${move_targets[@]}"; do
+    if [[ -e "$TARGET_DIR/$candidate" ]]; then
+      mv "$TARGET_DIR/$candidate" "$src_dir/$candidate"
+      echo "Moved into src/: $candidate"
+    fi
+  done
+}
+
 backup_file() {
   local dest="$1"
   if [[ "$BACKUP" == true && -f "$dest" ]]; then
@@ -67,6 +112,8 @@ copy_file() {
   cp "$src" "$dest"
   echo "Applied: $rel"
 }
+
+ensure_src_layout
 
 copy_file ".commitsage"
 copy_file ".commitlintrc.mjs"
@@ -134,4 +181,4 @@ if (!pkg.packageManager || !String(pkg.packageManager).startsWith('bun@')) {
   bunx lefthook install
 )
 
-echo "Done. Templates applied, AGENTS/CLAUDE rules enforced, husky/eslint removed, Bun deps installed."
+echo "Done. src/ layout enforced, templates applied, AGENTS/CLAUDE rules enforced, husky/eslint removed, Bun deps installed."
