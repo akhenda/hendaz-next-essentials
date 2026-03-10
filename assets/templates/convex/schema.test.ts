@@ -23,3 +23,24 @@ test("schema accepts example messages created by the mutation", async () => {
     author: "Skill",
   });
 });
+
+test("schema stores example settings", async () => {
+  const t = convexTest(schema, modules);
+
+  await t.mutation(api.mutations.updateAppSettings, {
+    accentColor: "#000000",
+    locale: "en-KE",
+    reducedMotion: true,
+  });
+
+  const stored = await t.run(async (ctx) => {
+    return await ctx.db.query("appSettings").collect();
+  });
+
+  expect(stored).toHaveLength(1);
+  expect(stored[0]).toMatchObject({
+    accentColor: "#000000",
+    locale: "en-KE",
+    reducedMotion: true,
+  });
+});

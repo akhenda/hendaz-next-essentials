@@ -46,4 +46,16 @@ describe("convex queries example", () => {
 
     expect(count).toBe(1);
   });
+
+  test("getAppSettings returns fallback settings when no settings exist", async () => {
+    const t = convexTest(schema, modules);
+
+    const settings = await t.query(api.queries.getAppSettings);
+
+    expect(settings).toMatchObject({
+      accentColor: "#0f766e",
+      locale: "en",
+      reducedMotion: false,
+    });
+  });
 });

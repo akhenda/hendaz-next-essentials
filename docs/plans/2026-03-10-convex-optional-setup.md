@@ -55,13 +55,14 @@ Install Convex packages and keep non-Convex setup unchanged by default.
 - Create: `assets/templates/convex/queries.test.ts`
 - Create: `assets/templates/convex/mutations.test.ts`
 - Create: `assets/templates/convex/actions.test.ts`
-- Create: `assets/templates/src/hooks/convex/use-example-query.ts`
-- Create: `assets/templates/src/hooks/convex/use-example-mutation.ts`
-- Create: `assets/templates/src/hooks/convex/use-example-action.ts`
+- Create: `assets/templates/src/modules/core/api/convex/index.ts`
+- Create: `assets/templates/src/modules/core/api/convex/provider.tsx`
+- Create: `assets/templates/src/modules/core/api/resources/settings/hooks/index.ts`
+- Create: `assets/templates/src/modules/core/api/resources/users/hooks/index.ts`
 
 **Step 1: Add minimal but realistic examples**
 
-Backend examples should show schema, query, mutation, and action patterns. Hooks should demonstrate `useQuery`, `useMutation`, and `useAction`.
+Backend examples should show schema, query, mutation, and action patterns. The API layer should demonstrate `useQuery`, `useMutation`, and `useAction` through resource-scoped hooks.
 
 **Step 2: Add tests**
 

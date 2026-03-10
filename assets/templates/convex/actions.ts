@@ -14,3 +14,12 @@ export const summarizeMessages = action({
     return selected.map(({ author, body }) => `${author}: ${body}`).join("\n");
   },
 });
+
+export const summarizeUsers = action({
+  args: {},
+  handler: async (ctx) => {
+    const user = await ctx.runQuery(api.queries.getCurrentUserProfile);
+
+    return `${user.name} <${user.email}>`;
+  },
+});

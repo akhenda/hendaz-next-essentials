@@ -28,3 +28,16 @@ test("summarizeMessages returns a newline-delimited summary", async () => {
   expect(summary).toContain("Brian: Message two");
   expect(summary).toContain("Amina: Message one");
 });
+
+test("summarizeUsers returns the current user summary", async () => {
+  const t = convexTest(schema, modules);
+
+  await t.mutation(api.mutations.saveCurrentUserProfile, {
+    email: "demo@example.com",
+    name: "Demo User",
+  });
+
+  const summary = await t.action(api.actions.summarizeUsers, {});
+
+  expect(summary).toBe("Demo User <demo@example.com>");
+});

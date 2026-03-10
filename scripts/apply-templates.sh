@@ -118,6 +118,24 @@ copy_file() {
   echo "Applied: $rel"
 }
 
+copy_file_as() {
+  local src_rel="$1"
+  local dest_rel="$2"
+  local src="$TEMPLATE_ROOT/$src_rel"
+  local dest="$TARGET_DIR/$dest_rel"
+
+  mkdir -p "$(dirname "$dest")"
+
+  if [[ -f "$dest" && "$OVERWRITE" == false ]]; then
+    echo "Skipped (exists): $dest_rel"
+    return
+  fi
+
+  backup_file "$dest"
+  cp "$src" "$dest"
+  echo "Applied: $dest_rel"
+}
+
 upsert_package_json() {
   local package_json="$TARGET_DIR/package.json"
 
@@ -189,9 +207,41 @@ copy_file "src/types/navigation.ts"
 copy_file "src/types/index.ts"
 copy_file "src/utils/logger/types.ts"
 copy_file "src/utils/logger/index.ts"
+copy_file "src/modules/core/api/config/axios.ts"
+copy_file "src/modules/core/api/config/client.ts"
+copy_file "src/modules/core/api/config/index.ts"
+copy_file "src/modules/core/api/react-query/client.ts"
+copy_file "src/modules/core/api/react-query/provider.tsx"
+copy_file "src/modules/core/api/react-query/index.ts"
+copy_file "src/modules/core/api/resources/countries/endpoints/README.md"
+copy_file "src/modules/core/api/resources/countries/endpoints/africa.ts"
+copy_file "src/modules/core/api/resources/countries/endpoints/index.ts"
+copy_file "src/modules/core/api/resources/countries/endpoints/types.ts"
+copy_file "src/modules/core/api/resources/countries/hooks/index.ts"
+copy_file "src/modules/core/api/resources/countries/index.ts"
+copy_file "src/modules/core/api/resources/countries/utils.ts"
+copy_file "src/modules/core/api/resources/index.ts"
+copy_file "src/modules/core/api/provider.tsx"
+copy_file "src/modules/core/api/index.ts"
+copy_file "src/modules/core/api/config/axios.test.ts"
+copy_file "src/modules/core/api/react-query/client.test.ts"
+copy_file "src/modules/core/api/provider.test.tsx"
 copy_file "tests/e2e/home.spec.ts"
 
 if [[ "$WITH_CONVEX" == true ]]; then
+  copy_file_as "src/modules/core/api/provider.convex.tsx" "src/modules/core/api/provider.tsx"
+  copy_file_as "src/modules/core/api/index.convex.ts" "src/modules/core/api/index.ts"
+  copy_file_as "src/modules/core/api/resources/index.convex.ts" "src/modules/core/api/resources/index.ts"
+  copy_file "src/modules/core/api/convex/index.ts"
+  copy_file "src/modules/core/api/convex/provider.tsx"
+  copy_file "src/modules/core/api/resources/settings/types.ts"
+  copy_file "src/modules/core/api/resources/settings/utils.ts"
+  copy_file "src/modules/core/api/resources/settings/hooks/index.ts"
+  copy_file "src/modules/core/api/resources/settings/index.ts"
+  copy_file "src/modules/core/api/resources/users/types.ts"
+  copy_file "src/modules/core/api/resources/users/utils.ts"
+  copy_file "src/modules/core/api/resources/users/hooks/index.ts"
+  copy_file "src/modules/core/api/resources/users/index.ts"
   copy_file "convex/test.setup.ts"
   copy_file "convex/schema.ts"
   copy_file "convex/queries.ts"
@@ -201,9 +251,6 @@ if [[ "$WITH_CONVEX" == true ]]; then
   copy_file "convex/queries.test.ts"
   copy_file "convex/mutations.test.ts"
   copy_file "convex/actions.test.ts"
-  copy_file "src/hooks/convex/use-example-query.ts"
-  copy_file "src/hooks/convex/use-example-mutation.ts"
-  copy_file "src/hooks/convex/use-example-action.ts"
 fi
 
 "$SCRIPT_DIR/enforce-agent-instructions.sh" "$TARGET_DIR"
@@ -222,6 +269,7 @@ echo "Installing dependencies with Bun..."
     eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-import >/dev/null 2>&1 || true
 
   bun add -d \
+    @testing-library/react \
     @playwright/test \
     @vitest/coverage-v8 \
     @biomejs/biome \
@@ -237,6 +285,8 @@ echo "Installing dependencies with Bun..."
     ultracite
 
   bun add \
+    @tanstack/react-query \
+    axios \
     @logtail/next \
     @sentry/nextjs \
     consola \

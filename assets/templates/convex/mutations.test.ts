@@ -31,3 +31,19 @@ test("createMessage rejects blank message bodies", async () => {
     }),
   ).rejects.toThrowError("Message body is required");
 });
+
+test("saveCurrentUserProfile creates or updates the example user profile", async () => {
+  const t = convexTest(schema, modules);
+
+  await t.mutation(api.mutations.saveCurrentUserProfile, {
+    email: "demo@example.com",
+    name: "Demo User",
+  });
+
+  const user = await t.query(api.queries.getCurrentUserProfile);
+
+  expect(user).toMatchObject({
+    email: "demo@example.com",
+    name: "Demo User",
+  });
+});

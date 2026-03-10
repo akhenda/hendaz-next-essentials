@@ -18,3 +18,37 @@ export const countMessages = query({
     return messages.length;
   },
 });
+
+export const getAppSettings = query({
+  args: {},
+  handler: async (ctx) => {
+    const settings = await ctx.db.query("appSettings").first();
+
+    if (settings) {
+      return settings;
+    }
+
+    return {
+      accentColor: "#0f766e",
+      locale: "en",
+      reducedMotion: false,
+    };
+  },
+});
+
+export const getCurrentUserProfile = query({
+  args: {},
+  handler: async (ctx) => {
+    const user = await ctx.db.query("users").first();
+
+    if (user) {
+      return user;
+    }
+
+    return {
+      _id: "demo-user",
+      email: "demo@example.com",
+      name: "Demo User",
+    };
+  },
+});
