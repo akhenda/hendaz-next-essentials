@@ -7,7 +7,7 @@
 5. Install Lefthook + lint-staged and remove Husky when present.
 6. Install and configure Vitest + Playwright for unit and e2e testing.
 7. Upsert `package.json` scripts and `config.commitizen.path = "cz-git"`.
-8. Add project files: `.markdownlint.json`, `lefthook.yml`, `.lintstagedrc.cjs`, `playwright.config.ts`, `vitest.config.ts`.
+8. Add project files: `.gitignore`, `.markdownlint.json`, `lefthook.yml`, `.lintstagedrc.cjs`, `playwright.config.ts`, `vitest.config.ts`.
 9. Add editor files under `.vscode/`.
 10. Add shared types under `src/types/` and logger under `src/utils/logger/`.
 11. Add an initial e2e smoke test under `tests/e2e/`.

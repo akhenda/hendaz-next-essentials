@@ -165,6 +165,7 @@ ensure_src_layout
 
 copy_file ".commitsage"
 copy_file ".commitlintrc.mjs"
+copy_file ".gitignore"
 copy_file "lefthook.yml"
 copy_file ".markdownlint.json"
 copy_file "bunfig.toml"

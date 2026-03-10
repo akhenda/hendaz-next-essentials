@@ -51,7 +51,7 @@ Options:
 The script will:
 
 1. Ensure the project uses `src/` layout. If root-level Next.js source directories/files such as `app`, `pages`, `components`, `lib`, `utils`, `hooks`, `styles`, `types`, `middleware.ts`, or `instrumentation.ts` exist and `src/` does not, the script moves them into `src/` first.
-2. Copy templates from `assets/templates` into the target project.
+2. Copy templates from `assets/templates` into the target project, including the standard `.gitignore`.
 3. Upsert `package.json` to enforce the Hendaz script set and `config.commitizen.path = "cz-git"`.
 4. Enforce strict rules in root `AGENTS.md`/`CLAUDE.md`.
 5. Remove ESLint config files if present.
@@ -62,7 +62,7 @@ The script will:
 
 ## Templates Included
 
-- Root configs: `.commitsage`, `.commitlintrc.mjs`, `lefthook.yml`, `.markdownlint.json`, `.lintstagedrc.cjs`, `bunfig.toml`, `biome.jsonc`
+- Root configs: `.commitsage`, `.commitlintrc.mjs`, `.gitignore`, `lefthook.yml`, `.markdownlint.json`, `.lintstagedrc.cjs`, `bunfig.toml`, `biome.jsonc`
 - Test configs: `playwright.config.ts`, `vitest.config.ts`
 - Editor configs: `.vscode/extensions.json`, `.vscode/settings.json`, `.vscode/tailwind.json`
 - Test scaffold: `tests/e2e/home.spec.ts`
@@ -127,3 +127,4 @@ Runtime dependencies installed by the script:
 - A provided template labeled as `src/types/common.ts` (barrel exports) is intentionally stored as `src/types/index.ts`.
 - The `src/` normalization step runs before template copying so all generated Hendaz defaults land in a consistent Next.js source layout.
 - Playwright browser installation is part of setup, so the script should leave the project ready to run `bun run test:e2e` without a separate manual install step.
+- The skill should add or overwrite `.gitignore` with the managed Next.js/React/macOS/Vim/Node template unless `--no-overwrite` is used.
