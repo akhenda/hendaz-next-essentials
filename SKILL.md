@@ -8,11 +8,13 @@ description: "Scaffold a newly created Next.js project with Hendaz defaults: com
 ## Workflow
 
 1. Confirm target directory is a Next.js project root and normalize it to `src/` layout if it is still using root-level source directories.
-2. Run `scripts/apply-templates.sh [--no-overwrite] [--backup] <project-path>` from this skill.
-3. Verify created files, removed files, and any moved source directories now live under `src/`.
-4. Verify `package.json` scripts and `config.commitizen.path` are updated to the Hendaz defaults, including Vitest + Playwright test commands.
-5. Verify root `AGENTS.md`/`CLAUDE.md` include enforced strict rules block.
-6. Run quality checks (`bun run lint`, `bun run typecheck`) when available.
+2. Ask the user whether Convex should be set up too. If yes, run the setup with `--with-convex`.
+3. Run `scripts/apply-templates.sh [--no-overwrite] [--backup] [--with-convex] <project-path>` from this skill.
+4. Verify created files, removed files, and any moved source directories now live under `src/`.
+5. Verify `package.json` scripts and `config.commitizen.path` are updated to the Hendaz defaults, including Vitest + Playwright test commands.
+6. Verify root `AGENTS.md`/`CLAUDE.md` include enforced strict rules block.
+7. If Convex was enabled, verify `convex/` examples, Convex hook examples under `src/hooks/convex/`, and Convex-aware Vitest configuration were added.
+8. Run quality checks (`bun run lint`, `bun run typecheck`) when available.
 
 ## Agent Instruction Enforcement
 
@@ -40,13 +42,14 @@ Managed by script:
 Use the script for deterministic setup:
 
 ```bash
-/Users/hendaz/.codex/skills/hendaz-next-essentials/scripts/apply-templates.sh [--no-overwrite] [--backup] /path/to/project
+/Users/hendaz/.codex/skills/hendaz-next-essentials/scripts/apply-templates.sh [--no-overwrite] [--backup] [--with-convex] /path/to/project
 ```
 
 Options:
 
 - `--no-overwrite`: skip files that already exist.
 - `--backup`: create timestamped backups before overwriting existing files.
+- `--with-convex`: add optional Convex backend examples, tests, and Next.js hook examples.
 
 The script will:
 
@@ -59,6 +62,7 @@ The script will:
 7. Install all required packages with Bun.
 8. Run `bun install` to refresh lockfile state.
 9. Run `bunx playwright install` so e2e browsers are available.
+10. If `--with-convex` is enabled, copy Convex example files under `convex/`, Convex hook examples under `src/hooks/convex/`, and install the Convex testing/runtime packages.
 
 ## Templates Included
 
@@ -68,6 +72,12 @@ The script will:
 - Test scaffold: `tests/e2e/home.spec.ts`
 - Types: `src/types/common.ts`, `src/types/components.ts`, `src/types/domain.ts`, `src/types/helpers.ts`, `src/types/navigation.ts`, `src/types/index.ts`
 - Logger: `src/utils/logger/index.ts`, `src/utils/logger/types.ts`
+
+If Convex is enabled, also include:
+
+- Convex backend: `convex/test.setup.ts`, `convex/schema.ts`, `convex/queries.ts`, `convex/mutations.ts`, `convex/actions.ts`
+- Convex tests: `convex/schema.test.ts`, `convex/queries.test.ts`, `convex/mutations.test.ts`, `convex/actions.test.ts`
+- Convex hooks: `src/hooks/convex/use-example-query.ts`, `src/hooks/convex/use-example-mutation.ts`, `src/hooks/convex/use-example-action.ts`
 
 ## Package.json Enforcement
 
@@ -93,6 +103,7 @@ This skill must also enforce:
 
 - `config.commitizen.path = "cz-git"`
 - Vitest coverage thresholds of `statements: 95`, `functions: 95`, `branches: 90`, and `lines: 95`
+- When Convex is enabled, the skill replaces the default root `vitest.config.ts` with a Convex-aware variant that uses `environmentMatchGlobs`, inlines `convex-test`, and includes Convex source files in coverage enforcement
 
 ## Package Installation Rules
 
@@ -121,6 +132,11 @@ Runtime dependencies installed by the script:
 - `consola`
 - `sonner`
 
+Additional dependencies installed only when Convex is enabled:
+
+- Dev: `@edge-runtime/vm`, `convex-test`
+- Runtime: `convex`
+
 ## Notes
 
 - The user corrected lockfile intent to `bunfig.toml`; do not add lockfile-specific templates.
@@ -129,3 +145,5 @@ Runtime dependencies installed by the script:
 - The `src/` normalization step runs before template copying so all generated Hendaz defaults land in a consistent Next.js source layout.
 - Playwright browser installation is part of setup, so the script should leave the project ready to run `bun run test:e2e` without a separate manual install step.
 - The skill should add or overwrite `.gitignore` with the managed Next.js/React/macOS/Vim/Node template unless `--no-overwrite` is used.
+- Convex setup is opt-in. The skill should explicitly ask the user before enabling it, then use `--with-convex` for deterministic setup if the user agrees.
+- After Convex setup, the user will still need to run `bunx convex dev` or another Convex codegen flow in their app to generate `convex/_generated/*` and connect a deployment.

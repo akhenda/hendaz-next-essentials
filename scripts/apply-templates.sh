@@ -7,6 +7,7 @@ TEMPLATE_ROOT="$SKILL_ROOT/assets/templates"
 
 OVERWRITE=true
 BACKUP=false
+WITH_CONVEX=false
 TARGET_DIR=""
 
 while [[ $# -gt 0 ]]; do
@@ -19,8 +20,12 @@ while [[ $# -gt 0 ]]; do
       BACKUP=true
       shift
       ;;
+    --with-convex)
+      WITH_CONVEX=true
+      shift
+      ;;
     -h|--help)
-      echo "Usage: $(basename "$0") [--no-overwrite] [--backup] [target-dir]"
+      echo "Usage: $(basename "$0") [--no-overwrite] [--backup] [--with-convex] [target-dir]"
       exit 0
       ;;
     *)
@@ -113,6 +118,24 @@ copy_file() {
   echo "Applied: $rel"
 }
 
+copy_file_as() {
+  local src_rel="$1"
+  local dest_rel="$2"
+  local src="$TEMPLATE_ROOT/$src_rel"
+  local dest="$TARGET_DIR/$dest_rel"
+
+  mkdir -p "$(dirname "$dest")"
+
+  if [[ -f "$dest" && "$OVERWRITE" == false ]]; then
+    echo "Skipped (exists): $dest_rel"
+    return
+  fi
+
+  backup_file "$dest"
+  cp "$src" "$dest"
+  echo "Applied: $dest_rel"
+}
+
 upsert_package_json() {
   local package_json="$TARGET_DIR/package.json"
 
@@ -186,6 +209,22 @@ copy_file "src/utils/logger/types.ts"
 copy_file "src/utils/logger/index.ts"
 copy_file "tests/e2e/home.spec.ts"
 
+if [[ "$WITH_CONVEX" == true ]]; then
+  copy_file_as "vitest.convex.config.ts" "vitest.config.ts"
+  copy_file "convex/test.setup.ts"
+  copy_file "convex/schema.ts"
+  copy_file "convex/queries.ts"
+  copy_file "convex/mutations.ts"
+  copy_file "convex/actions.ts"
+  copy_file "convex/schema.test.ts"
+  copy_file "convex/queries.test.ts"
+  copy_file "convex/mutations.test.ts"
+  copy_file "convex/actions.test.ts"
+  copy_file "src/hooks/convex/use-example-query.ts"
+  copy_file "src/hooks/convex/use-example-mutation.ts"
+  copy_file "src/hooks/convex/use-example-action.ts"
+fi
+
 "$SCRIPT_DIR/enforce-agent-instructions.sh" "$TARGET_DIR"
 
 rm -f "$TARGET_DIR/.eslintrc" "$TARGET_DIR/.eslintrc.js" "$TARGET_DIR/.eslintrc.cjs" \
@@ -222,9 +261,21 @@ echo "Installing dependencies with Bun..."
     consola \
     sonner
 
+  if [[ "$WITH_CONVEX" == true ]]; then
+    bun add -d \
+      @edge-runtime/vm \
+      convex-test
+
+    bun add convex
+  fi
+
   bun install
   bunx lefthook install
   bunx playwright install
 )
 
-echo "Done. src/ layout enforced, templates applied, package.json scripts configured, AGENTS/CLAUDE rules enforced, husky/eslint removed, Bun deps installed, and Playwright is configured."
+if [[ "$WITH_CONVEX" == true ]]; then
+  echo "Done. src/ layout enforced, templates applied, Convex examples configured, package.json scripts configured, AGENTS/CLAUDE rules enforced, husky/eslint removed, Bun deps installed, and Playwright is configured."
+else
+  echo "Done. src/ layout enforced, templates applied, package.json scripts configured, AGENTS/CLAUDE rules enforced, husky/eslint removed, Bun deps installed, and Playwright is configured."
+fi
