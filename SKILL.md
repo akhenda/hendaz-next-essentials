@@ -103,7 +103,7 @@ This skill must also enforce:
 
 - `config.commitizen.path = "cz-git"`
 - Vitest coverage thresholds of `statements: 95`, `functions: 95`, `branches: 90`, and `lines: 95`
-- When Convex is enabled, the skill replaces the default root `vitest.config.ts` with a Convex-aware variant that uses `environmentMatchGlobs`, inlines `convex-test`, and includes Convex source files in coverage enforcement
+- The skill uses one root `vitest.config.ts` with Vitest projects for app and Convex tests, inlines `convex-test` for the Convex project, and enforces the same 95/95/90/95 coverage thresholds across included app and Convex source files
 
 ## Package Installation Rules
 

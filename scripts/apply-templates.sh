@@ -118,24 +118,6 @@ copy_file() {
   echo "Applied: $rel"
 }
 
-copy_file_as() {
-  local src_rel="$1"
-  local dest_rel="$2"
-  local src="$TEMPLATE_ROOT/$src_rel"
-  local dest="$TARGET_DIR/$dest_rel"
-
-  mkdir -p "$(dirname "$dest")"
-
-  if [[ -f "$dest" && "$OVERWRITE" == false ]]; then
-    echo "Skipped (exists): $dest_rel"
-    return
-  fi
-
-  backup_file "$dest"
-  cp "$src" "$dest"
-  echo "Applied: $dest_rel"
-}
-
 upsert_package_json() {
   local package_json="$TARGET_DIR/package.json"
 
@@ -210,7 +192,6 @@ copy_file "src/utils/logger/index.ts"
 copy_file "tests/e2e/home.spec.ts"
 
 if [[ "$WITH_CONVEX" == true ]]; then
-  copy_file_as "vitest.convex.config.ts" "vitest.config.ts"
   copy_file "convex/test.setup.ts"
   copy_file "convex/schema.ts"
   copy_file "convex/queries.ts"
