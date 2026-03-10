@@ -92,6 +92,7 @@ This skill must verify and upsert these `package.json` scripts:
 This skill must also enforce:
 
 - `config.commitizen.path = "cz-git"`
+- Vitest coverage thresholds of `statements: 95`, `functions: 95`, `branches: 90`, and `lines: 95`
 
 ## Package Installation Rules
 

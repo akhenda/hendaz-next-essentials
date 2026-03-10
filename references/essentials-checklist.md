@@ -5,7 +5,7 @@
 3. Install commit tooling: `commitizen`, `commitlint`, `cz-git`, `.commitsage`, `.commitlintrc.mjs`.
 4. Install Biome + Ultracite and remove ESLint configs when present.
 5. Install Lefthook + lint-staged and remove Husky when present.
-6. Install and configure Vitest + Playwright for unit and e2e testing.
+6. Install and configure Vitest + Playwright for unit and e2e testing, including Vitest coverage thresholds of 95/95/90/95 for statements/functions/branches/lines.
 7. Upsert `package.json` scripts and `config.commitizen.path = "cz-git"`.
 8. Add project files: `.gitignore`, `.markdownlint.json`, `lefthook.yml`, `.lintstagedrc.cjs`, `playwright.config.ts`, `vitest.config.ts`.
 9. Add editor files under `.vscode/`.

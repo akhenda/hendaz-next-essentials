@@ -15,6 +15,12 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "html"],
       include: ["src/**/*.{ts,tsx}"],
+      thresholds: {
+        statements: 95,
+        functions: 95,
+        branches: 90,
+        lines: 95,
+      },
     },
   },
 });
