@@ -13,8 +13,8 @@
 ### Task 1: Document the optional Convex workflow
 
 **Files:**
-- Modify: `/Users/hendaz/.codex/skills/hendaz-next-essentials/SKILL.md`
-- Modify: `/Users/hendaz/.codex/skills/hendaz-next-essentials/references/essentials-checklist.md`
+- Modify: `SKILL.md`
+- Modify: `references/essentials-checklist.md`
 
 **Step 1: Write the failing documentation gap**
 
@@ -30,7 +30,7 @@ Add:
 ### Task 2: Extend the apply script for optional Convex setup
 
 **Files:**
-- Modify: `/Users/hendaz/.codex/skills/hendaz-next-essentials/scripts/apply-templates.sh`
+- Modify: `scripts/apply-templates.sh`
 
 **Step 1: Add flag handling**
 
@@ -47,17 +47,17 @@ Install Convex packages and keep non-Convex setup unchanged by default.
 ### Task 3: Add Convex templates and tests
 
 **Files:**
-- Create: `/Users/hendaz/.codex/skills/hendaz-next-essentials/assets/templates/convex/schema.ts`
-- Create: `/Users/hendaz/.codex/skills/hendaz-next-essentials/assets/templates/convex/queries.ts`
-- Create: `/Users/hendaz/.codex/skills/hendaz-next-essentials/assets/templates/convex/mutations.ts`
-- Create: `/Users/hendaz/.codex/skills/hendaz-next-essentials/assets/templates/convex/actions.ts`
-- Create: `/Users/hendaz/.codex/skills/hendaz-next-essentials/assets/templates/convex/schema.test.ts`
-- Create: `/Users/hendaz/.codex/skills/hendaz-next-essentials/assets/templates/convex/queries.test.ts`
-- Create: `/Users/hendaz/.codex/skills/hendaz-next-essentials/assets/templates/convex/mutations.test.ts`
-- Create: `/Users/hendaz/.codex/skills/hendaz-next-essentials/assets/templates/convex/actions.test.ts`
-- Create: `/Users/hendaz/.codex/skills/hendaz-next-essentials/assets/templates/src/hooks/convex/use-example-query.ts`
-- Create: `/Users/hendaz/.codex/skills/hendaz-next-essentials/assets/templates/src/hooks/convex/use-example-mutation.ts`
-- Create: `/Users/hendaz/.codex/skills/hendaz-next-essentials/assets/templates/src/hooks/convex/use-example-action.ts`
+- Create: `assets/templates/convex/schema.ts`
+- Create: `assets/templates/convex/queries.ts`
+- Create: `assets/templates/convex/mutations.ts`
+- Create: `assets/templates/convex/actions.ts`
+- Create: `assets/templates/convex/schema.test.ts`
+- Create: `assets/templates/convex/queries.test.ts`
+- Create: `assets/templates/convex/mutations.test.ts`
+- Create: `assets/templates/convex/actions.test.ts`
+- Create: `assets/templates/src/hooks/convex/use-example-query.ts`
+- Create: `assets/templates/src/hooks/convex/use-example-mutation.ts`
+- Create: `assets/templates/src/hooks/convex/use-example-action.ts`
 
 **Step 1: Add minimal but realistic examples**
 
@@ -70,7 +70,7 @@ Use Convex-oriented tests that fit a root Vitest config and make the examples ex
 ### Task 4: Make Vitest Convex-aware with coverage thresholds
 
 **Files:**
-- Modify: `/Users/hendaz/.codex/skills/hendaz-next-essentials/assets/templates/vitest.config.ts`
+- Modify: `assets/templates/vitest.config.ts`
 
 **Step 1: Add Convex-aware environment matching**
 
@@ -83,12 +83,12 @@ Keep the existing app thresholds and add Convex thresholds so the skill enforces
 ### Task 5: Verify
 
 **Files:**
-- Verify: `/Users/hendaz/.codex/skills/hendaz-next-essentials/scripts/apply-templates.sh`
-- Verify: `/Users/hendaz/.codex/skills/hendaz-next-essentials/assets/templates/vitest.config.ts`
+- Verify: `scripts/apply-templates.sh`
+- Verify: `assets/templates/vitest.config.ts`
 
 **Step 1: Run shell syntax validation**
 
-Run: `bash -n /Users/hendaz/.codex/skills/hendaz-next-essentials/scripts/apply-templates.sh`
+Run: `bash -n scripts/apply-templates.sh`
 
 **Step 2: Read back docs and key templates**
 
