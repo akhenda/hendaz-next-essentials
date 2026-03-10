@@ -113,6 +113,54 @@ copy_file() {
   echo "Applied: $rel"
 }
 
+upsert_package_json() {
+  local package_json="$TARGET_DIR/package.json"
+
+  if [[ ! -f "$package_json" ]]; then
+    echo "No package.json found. Skipping package.json script/config enforcement."
+    return
+  fi
+
+  node -e "
+const fs = require('fs');
+const packageJsonPath = process.argv[1];
+const pkg = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+const bunVersion = process.argv[2];
+
+pkg.packageManager = 'bun@' + bunVersion;
+
+pkg.scripts = {
+  ...(pkg.scripts ?? {}),
+  lint: 'biome check . --error-on-warnings',
+  format: 'biome check . --write',
+  typecheck: 'tsc --noEmit',
+  commit: 'git-cz',
+  commitlint: 'commitlint --edit',
+  prepare: 'lefthook install',
+  test: 'bun run test:unit && bun run test:e2e',
+  'test:unit': 'vitest run --coverage',
+  'test:unit:watch': 'vitest',
+  'test:e2e': 'playwright test --grep-invert @visual',
+  'test:e2e:headed': 'playwright test --headed',
+  'test:e2e:debug': 'playwright test --debug',
+  'test:e2e:update': 'playwright test --update-snapshots',
+  'test:e2e:visual': 'playwright test --grep @visual',
+  validate: 'bun run format && bun run lint && bun run typecheck && bun run test',
+};
+
+pkg.config = {
+  ...(pkg.config ?? {}),
+  commitizen: {
+    path: 'cz-git',
+  },
+};
+
+fs.writeFileSync(packageJsonPath, JSON.stringify(pkg, null, 2) + '\\n');
+" "$package_json" "$(bun --version)"
+
+  echo "Updated package.json scripts and cz-git config."
+}
+
 ensure_src_layout
 
 copy_file ".commitsage"
@@ -125,6 +173,8 @@ copy_file ".lintstagedrc.cjs"
 copy_file ".vscode/extensions.json"
 copy_file ".vscode/settings.json"
 copy_file ".vscode/tailwind.json"
+copy_file "playwright.config.ts"
+copy_file "vitest.config.ts"
 copy_file "src/types/common.ts"
 copy_file "src/types/components.ts"
 copy_file "src/types/domain.ts"
@@ -133,6 +183,7 @@ copy_file "src/types/navigation.ts"
 copy_file "src/types/index.ts"
 copy_file "src/utils/logger/types.ts"
 copy_file "src/utils/logger/index.ts"
+copy_file "tests/e2e/home.spec.ts"
 
 "$SCRIPT_DIR/enforce-agent-instructions.sh" "$TARGET_DIR"
 
@@ -144,31 +195,24 @@ echo "Installing dependencies with Bun..."
 (
   cd "$TARGET_DIR"
 
-  if [[ -f package.json ]]; then
-    BUN_VERSION="$(bun --version)"
-    node -e "
-const fs = require('fs');
-const p = 'package.json';
-const pkg = JSON.parse(fs.readFileSync(p, 'utf8'));
-if (!pkg.packageManager || !String(pkg.packageManager).startsWith('bun@')) {
-  pkg.packageManager = 'bun@' + process.argv[1];
-  fs.writeFileSync(p, JSON.stringify(pkg, null, 2) + '\\n');
-  console.log('Set packageManager to', pkg.packageManager);
-}
-" "$BUN_VERSION"
-  fi
+  upsert_package_json
 
   bun remove husky eslint eslint-config-next @typescript-eslint/eslint-plugin @typescript-eslint/parser \
     eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-import >/dev/null 2>&1 || true
 
   bun add -d \
+    @playwright/test \
+    @vitest/coverage-v8 \
     @biomejs/biome \
     @commitlint/cli \
     @commitlint/config-conventional \
     commitizen \
     cz-git \
+    jsdom \
     lefthook \
     lint-staged \
+    playwright \
+    vitest \
     ultracite
 
   bun add \
@@ -179,6 +223,7 @@ if (!pkg.packageManager || !String(pkg.packageManager).startsWith('bun@')) {
 
   bun install
   bunx lefthook install
+  bunx playwright install
 )
 
-echo "Done. src/ layout enforced, templates applied, AGENTS/CLAUDE rules enforced, husky/eslint removed, Bun deps installed."
+echo "Done. src/ layout enforced, templates applied, package.json scripts configured, AGENTS/CLAUDE rules enforced, husky/eslint removed, Bun deps installed, and Playwright is configured."

@@ -10,8 +10,9 @@ description: "Scaffold a newly created Next.js project with Hendaz defaults: com
 1. Confirm target directory is a Next.js project root and normalize it to `src/` layout if it is still using root-level source directories.
 2. Run `scripts/apply-templates.sh [--no-overwrite] [--backup] <project-path>` from this skill.
 3. Verify created files, removed files, and any moved source directories now live under `src/`.
-4. Verify root `AGENTS.md`/`CLAUDE.md` include enforced strict rules block.
-5. Run quality checks (`bun run lint`, `bun run typecheck`) when available.
+4. Verify `package.json` scripts and `config.commitizen.path` are updated to the Hendaz defaults, including Vitest + Playwright test commands.
+5. Verify root `AGENTS.md`/`CLAUDE.md` include enforced strict rules block.
+6. Run quality checks (`bun run lint`, `bun run typecheck`) when available.
 
 ## Agent Instruction Enforcement
 
@@ -51,18 +52,46 @@ The script will:
 
 1. Ensure the project uses `src/` layout. If root-level Next.js source directories/files such as `app`, `pages`, `components`, `lib`, `utils`, `hooks`, `styles`, `types`, `middleware.ts`, or `instrumentation.ts` exist and `src/` does not, the script moves them into `src/` first.
 2. Copy templates from `assets/templates` into the target project.
-3. Enforce strict rules in root `AGENTS.md`/`CLAUDE.md`.
-4. Remove ESLint config files if present.
-5. Remove `.husky/` if present.
-6. Install all required packages with Bun.
-7. Run `bun install` to refresh lockfile state.
+3. Upsert `package.json` to enforce the Hendaz script set and `config.commitizen.path = "cz-git"`.
+4. Enforce strict rules in root `AGENTS.md`/`CLAUDE.md`.
+5. Remove ESLint config files if present.
+6. Remove `.husky/` if present.
+7. Install all required packages with Bun.
+8. Run `bun install` to refresh lockfile state.
+9. Run `bunx playwright install` so e2e browsers are available.
 
 ## Templates Included
 
 - Root configs: `.commitsage`, `.commitlintrc.mjs`, `lefthook.yml`, `.markdownlint.json`, `.lintstagedrc.cjs`, `bunfig.toml`, `biome.jsonc`
+- Test configs: `playwright.config.ts`, `vitest.config.ts`
 - Editor configs: `.vscode/extensions.json`, `.vscode/settings.json`, `.vscode/tailwind.json`
+- Test scaffold: `tests/e2e/home.spec.ts`
 - Types: `src/types/common.ts`, `src/types/components.ts`, `src/types/domain.ts`, `src/types/helpers.ts`, `src/types/navigation.ts`, `src/types/index.ts`
 - Logger: `src/utils/logger/index.ts`, `src/utils/logger/types.ts`
+
+## Package.json Enforcement
+
+This skill must verify and upsert these `package.json` scripts:
+
+- `lint`: `biome check . --error-on-warnings`
+- `format`: `biome check . --write`
+- `typecheck`: `tsc --noEmit`
+- `commit`: `git-cz`
+- `commitlint`: `commitlint --edit`
+- `prepare`: `lefthook install`
+- `test`: `bun run test:unit && bun run test:e2e`
+- `test:unit`: `vitest run --coverage`
+- `test:unit:watch`: `vitest`
+- `test:e2e`: `playwright test --grep-invert @visual`
+- `test:e2e:headed`: `playwright test --headed`
+- `test:e2e:debug`: `playwright test --debug`
+- `test:e2e:update`: `playwright test --update-snapshots`
+- `test:e2e:visual`: `playwright test --grep @visual`
+- `validate`: `bun run format && bun run lint && bun run typecheck && bun run test`
+
+This skill must also enforce:
+
+- `config.commitizen.path = "cz-git"`
 
 ## Package Installation Rules
 
@@ -70,13 +99,18 @@ Use Bun only.
 
 Dev dependencies installed by the script:
 
+- `@playwright/test`
+- `@vitest/coverage-v8`
 - `@biomejs/biome`
 - `@commitlint/cli`
 - `@commitlint/config-conventional`
 - `commitizen`
 - `cz-git`
+- `jsdom`
 - `lefthook`
 - `lint-staged`
+- `playwright`
+- `vitest`
 - `ultracite`
 
 Runtime dependencies installed by the script:
@@ -92,3 +126,4 @@ Runtime dependencies installed by the script:
 - If template updates are requested, update files in `assets/templates/` first, then re-run the apply script.
 - A provided template labeled as `src/types/common.ts` (barrel exports) is intentionally stored as `src/types/index.ts`.
 - The `src/` normalization step runs before template copying so all generated Hendaz defaults land in a consistent Next.js source layout.
+- Playwright browser installation is part of setup, so the script should leave the project ready to run `bun run test:e2e` without a separate manual install step.
