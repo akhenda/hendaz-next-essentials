@@ -116,6 +116,7 @@ This skill must also enforce:
 - `config.commitizen.path = "cz-git"`
 - Vitest coverage thresholds of `statements: 95`, `functions: 95`, `branches: 90`, and `lines: 95`
 - The skill uses one root `vitest.config.ts` with Vitest projects for app and Convex tests, inlines `convex-test` for the Convex project, and enforces the same 95/95/90/95 coverage thresholds across included app and Convex source files
+- The Convex API layer should expose the shared hook surface, including `useQueryWithCache`, `useQueriesWithCache`, `useQueryWithStatus`, and `useQueryWithStatusAndCache`, and resource examples should prefer the cached/status-based query hooks over plain `useQuery`
 
 ## Package Installation Rules
 
@@ -150,7 +151,7 @@ Runtime dependencies installed by the script:
 Additional dependencies installed only when Convex is enabled:
 
 - Dev: `@edge-runtime/vm`, `convex-test`
-- Runtime: `convex`
+- Runtime: `convex`, `convex-helpers`
 
 ## Notes
 

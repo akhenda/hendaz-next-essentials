@@ -12,7 +12,7 @@
 10. Add shared types under `src/types/` and logger under `src/utils/logger/`.
 11. Add the API foundation under `src/modules/core/api`, including Axios config, React Query setup, countries resource examples, and the base `APIProvider`.
 12. Add an initial e2e smoke test under `tests/e2e/`.
-13. If Convex is enabled, add `convex/` example backend files, `src/modules/core/api/convex/`, Convex-backed `settings` and `users` resources, and Convex-specific dependencies while keeping the single root Vitest config.
+13. If Convex is enabled, add `convex/` example backend files, `src/modules/core/api/convex/`, Convex-backed `settings` and `users` resources, preferred cached/status Convex hooks, and Convex-specific dependencies while keeping the single root Vitest config.
 14. Run `bun install` and `bunx playwright install` at the end.
 
 Use `scripts/apply-templates.sh <project-path>` to apply all templates and installs in one pass.

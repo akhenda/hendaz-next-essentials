@@ -6,6 +6,7 @@ import {
   ConvexProvider as ConvexReactProvider,
   ConvexReactClient,
 } from "convex/react";
+import { ConvexQueryCacheProvider } from "convex-helpers/react/cache/provider";
 
 let convexClient: ConvexReactClient | null = null;
 
@@ -32,5 +33,9 @@ export function ConvexProvider({ children }: PropsWithChildren) {
     return <>{children}</>;
   }
 
-  return <ConvexReactProvider client={client}>{children}</ConvexReactProvider>;
+  return (
+    <ConvexReactProvider client={client}>
+      <ConvexQueryCacheProvider>{children}</ConvexQueryCacheProvider>
+    </ConvexReactProvider>
+  );
 }

@@ -297,6 +297,8 @@ echo "Installing dependencies with Bun..."
       @edge-runtime/vm \
       convex-test
 
+    bun add convex-helpers
+
     bun add convex
   fi
 
